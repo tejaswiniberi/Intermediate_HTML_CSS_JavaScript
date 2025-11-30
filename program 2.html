@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 2: Advanced To-Do with Images</title>
+    <style>
+        /* --- CSS STYLES --- */
+        
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #e0f7fa;
+            color: #333;
+            padding-bottom: 50px;
+        }
+
+        /* Navigation */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #004d40;
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .logo { font-size: 1.5rem; font-weight: bold; }
+        
+        .nav-links { list-style: none; display: flex; gap: 20px; }
+        .nav-links a { text-decoration: none; color: white; transition: color 0.3s; }
+        .nav-links a:hover { color: #a7ffeb; }
+
+        /* Grid Layout */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 3rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Card Styling */
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 5px solid #009688;
+        }
+
+        h2 {
+            margin-bottom: 1.5rem;
+            color: #004d40;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        /* --- Form Styling --- */
+        .form-group { margin-bottom: 1.2rem; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; }
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .btn-primary {
+            background-color: #009688;
+            color: white;
+            border: none;
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+            font-weight: bold;
+        }
+        .error-msg { color: #d32f2f; font-size: 0.85rem; display: none; margin-top: 5px; }
+
+        /* --- Advanced To-Do Styling --- */
+        .todo-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed #ccc;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Style the file input to look cleaner */
+        input[type="file"] {
+            font-size: 0.9rem;
+            padding: 5px;
+        }
+
+        .btn-secondary {
+            background-color: #0288d1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        .btn-secondary:hover { background-color: #0277bd; }
+
+        #todoList { list-style: none; }
+
+        #todoList li {
+            background: #fff;
+            margin-bottom: 15px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* Align to top if image is tall */
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 5px solid #8bc34a;
+            animation: slideIn 0.3s ease;
+        }
+
+        /* Container for text and image inside the list item */
+        .task-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .task-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .task-img {
+            max-width: 150px; /* Limit image size */
+            max-height: 150px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            object-fit: cover;
+            display: block;
+        }
+
+        .delete-btn {
+            background: #ef5350;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Mobile */
+        @media (max-width: 768px) {
+            .grid-container { grid-template-columns: 1fr; padding: 1rem; }
+            .navbar { flex-direction: column; gap: 15px; }
+            .input-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">ApexPlanet Tasks</div>
+        <ul class="nav-links">
+            <li><a href="#contact-section">Contact</a></li>
+            <li><a href="#todo-section">To-Do List</a></li>
+        </ul>
+    </nav>
+
+    <main class="grid-container">
+        
+        <section id="contact-section" class="card">
+            <h2>Contact Form</h2>
+            <form id="contactForm" novalidate>
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" placeholder="Enter your name">
+                    <small class="error-msg" id="nameError"></small>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email">
+                    <small class="error-msg" id="emailError"></small>
+                </div>
+                <button type="submit" class="btn-primary">Submit Data</button>
+            </form>
+        </section>
+
+        <section id="todo-section" class="card">
+            <h2>To-Do & Image Gallery</h2>
+            
+            <div class="todo-controls">
+                <label style="font-size: 0.9rem; color: #666;">1. Description:</label>
+                <div class="input-row">
+                    <input type="text" id="todoInput" placeholder="What needs to be done?">
+                </div>
+                
+                <label style="font-size: 0.9rem; color: #666; margin-top: 5px;">2. Attach Image (Optional):</label>
+                <div class="input-row">
+                    <input type="file" id="imageInput" accept="image/*">
+                    <button id="addBtn" class="btn-secondary">Add Task</button>
+                </div>
+            </div>
+
+            <ul id="todoList">
+                </ul>
+        </section>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- FORM VALIDATION ---
+            const form = document.getElementById('contactForm');
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const nameError = document.getElementById('nameError');
+            const emailError = document.getElementById('emailError');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let isValid = true;
+                
+                // Reset Styles
+                [nameError, emailError].forEach(el => el.style.display = 'none');
+                [nameInput, emailInput].forEach(el => el.style.borderColor = '#ccc');
+
+                // Check Name
+                if (!nameInput.value.trim()) {
+                    nameError.innerText = "Name is required.";
+                    nameError.style.display = 'block';
+                    nameInput.style.borderColor = '#d32f2f';
+                    isValid = false;
+                }
+                // Check Email
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) {
+                    emailError.innerText = "Invalid email format.";
+                    emailError.style.display = 'block';
+                    emailInput.style.borderColor = '#d32f2f';
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    alert("Success!");
+                    form.reset();
+                }
+            });
+
+            // --- TO-DO WITH IMAGES LOGIC ---
+            const todoInput = document.getElementById('todoInput');
+            const imageInput = document.getElementById('imageInput');
+            const addBtn = document.getElementById('addBtn');
+            const todoList = document.getElementById('todoList');
+
+            function addTask() {
+                const taskText = todoInput.value.trim();
+                const imageFile = imageInput.files[0];
+
+                // Validation: Ensure at least text OR an image is present
+                if (taskText === '' && !imageFile) {
+                    alert("Please enter text or select an image.");
+                    return;
+                }
+
+                // Helper function to render the list item
+                const renderItem = (imgSrc) => {
+                    const li = document.createElement('li');
+                    
+                    // Left side content container
+                    const contentDiv = document.createElement('div');
+                    contentDiv.className = 'task-content';
+
+                    // Add Text if exists
+                    if (taskText) {
+                        const textSpan = document.createElement('span');
+                        textSpan.className = 'task-text';
+                        textSpan.textContent = taskText;
+                        contentDiv.appendChild(textSpan);
+                    }
+
+                    // Add Image if exists
+                    if (imgSrc) {
+                        const img = document.createElement('img');
+                        img.src = imgSrc;
+                        img.className = 'task-img';
+                        contentDiv.appendChild(img);
+                    }
+
+                    li.appendChild(contentDiv);
+
+                    // Delete Button
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = 'Delete';
+                    deleteBtn.className = 'delete-btn';
+                    deleteBtn.onclick = () => {
+                        li.remove();
+                    };
+
+                    li.appendChild(deleteBtn);
+                    todoList.appendChild(li);
+
+                    // Clear inputs
+                    todoInput.value = '';
+                    imageInput.value = ''; 
+                };
+
+                // If there is an image, we must read it first
+                if (imageFile) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        // e.target.result contains the image data
+                        renderItem(e.target.result);
+                    };
+                    
+                    reader.readAsDataURL(imageFile);
+                } else {
+                    // No image, just text
+                    renderItem(null);
+                }
+            }
+
+            addBtn.addEventListener('click', addTask);
+        });
+    </script>
+</body>
+</html>
